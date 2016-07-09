@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>INTROBAY - Docker & Drupal</title>
+
+		<meta name="description" content="Docker & Drupal">
+		<meta name="author" content="Ignacio López Flores - Javier Gómez Gómez">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/introbay.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+		<style type="text/css">
+            .reveal section img.sin-cajas {
+                border:none; 
+                width:85px ;
+                background: none;
+                box-shadow: none;
+            }
+        </style>
+
+        <!-- Slides  content to be added here -->
+
+        <div class="reveal mi-clase">
+            <div class="slides">
+
+                <section>
+                    <img src="imgs/logo-dsummer-white.svg" style="width: 40%;box-shadow: none;border: none;">
+                    <div class="title-wrapper">
+                        <div style="float: left; margin-bottom: 20px;">
+                            <img src="imgs/Logo-Docker.png" style="width: 44%;float: left; margin-left: 75px;">
+                            <span class="ampersand">&</span>
+                            <img src="imgs/drupal-logo.png" style="width: 30%; float: left">
+                        </div>
+                        <h3>Zero downtime deployment</h3>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Sobre mi</h2>
+                    <img align="left" src="imgs/sobre-nosotros/ignacio.png" width="250" border="none">
+                    <div style="float: right;" class="ficha">
+                      <p>Ignacio L&oacute;pez Flores</p>
+                      <p>Founder & CEO @ Introbay</p>
+                      <a href="https://twitter.com/ignaciolflores" target="_blank">@ignaciolflores</a>
+                      <p>IRC: ignaciolflores</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>¿Por qué?</h2>
+                    <p>Docker es una tecnología ampliamente extendida, pero aún queda mucho por desarrollar y documentar.</p>
+                </section>
+                <section>
+                    <h2>¿Por qué?</h2>
+                    <p>En concreto, hay poca información relacionando Drupal & Docker.</p>
+                </section>
+                <section>
+                    <h2>¿Por qué?</h2>
+                    <p>Los procesos de actualización suelen ser el punto crítico en el ciclo de vida de una aplicación.</p>
+                </section>
+                <section>
+                    <h2>¿Por qué?</h2>
+                    <p>En general, hablando de <strong>DevOps & Drupal</strong> hay poca información.</p>
+                </section>
+                <section>
+                    <h2>¿Por qué?</h2>
+                    <p>Porque <em>hablar es gratis</em> ;-)</p>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Actualizaciones</h2>
+                        <ul>
+                            <li><span class="resaltado">Base de datos: </span>Si tenemos una actualización que implica modificaciones en la base de datos, como mucho podremos minimizar el downtime.<br/>
+                            Dos opciones:
+                                <ul>
+                                    <li class="fragment">Usuarios conocidos: Podemos avisar a los usuarios y planificar la actualización, incluso usar horas a las que se sepa que no habrá usuarios conectados.</li>
+                                    <li class="fragment">Usuarios registrados: No podemos avisar a los usuarios => Evaluar el impacto para planificar mejor momento... te toca trasnochar</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2>Actualizaciones</h2>
+                        <ul>
+                            <li><span class="resaltado">Otros cambios: </span>En cambio, si las modificaciones son de estilo o en un tpl, preprocess, código de un módulo, etc. podremos conseguir desplegar sin tiempo de caída.</li>
+                        </ul>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Opciones para desplegar</h2>
+                        <ul>
+                            <li class="fragment">Re-deploy</li>
+                            <li class="fragment">Blue-Green deployment</li>
+                            <li class="fragment">A/B deployment</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Re-deploy</h2>
+                        <p>Destroy, Create => Downtime</p>
+                    </section>
+                    <section>
+                        <h2>Blue-Green</h2>
+                        <p>Solucionamos el problema asegurando que hay al menos dos servicios/entornos en ejecución al mismo tiempo.</p>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ## Ejemplo
+
+                            `docker-compose.yml`
+
+                            ```
+                            blue:
+                              image: midrupal:1.0
+                              links:
+                                - db:db-server
+                              environment:
+                                - VIRTUAL_HOST=midominio.com
+                            green:
+                              image: midrupal:1.1
+                              links:
+                                - db:db-server
+                              environment:
+                                - VIRTUAL_HOST=midominio.com
+                            db:
+                              image: mysql:5.6
+                            ```
+                        </script>
+                    </section>
+                    <section>
+                        <h2>Perooo, y cómo se hace??</h2>
+                        <p>Un entorno se encuentra en estado <em>idle</em> y otro en <em>live</em>.</p>
+                        <p>Comenzamos a escalar el <em>idle</em> y a eliminar el <em>live</em> hasta que se invierta la situación</p>
+                    </section>
+                    <section>
+                        <h2>Perooo, y cómo se hace??</h2>
+                        <p>docker-compose scale es tu amigo.</p>
+                    </section>
+
+                    <section data-markdown>
+                        <script type="text/template">
+                            ## Perooo, y cómo se hace??
+
+                            ```
+                            $ docker-compose scale blue=8 green=0
+                            $ docker-compose scale blue=6 green=2
+                            $ docker-compose scale blue=4 green=4
+                            $ docker-compose scale blue=2 green=6
+                            $ docker-compose scale blue=0 green=8
+                            ```
+                            El nuevo entorno live es green.<br/>
+                            Blue pasa a idle.
+
+                            Fácil, sencillo y para toda la familia.
+
+                        </script>
+                    </section>
+                    <section>
+                        <h2>Mi amiga la caché</h2>
+                        <p>La caché se limpia una vez hecho el paso de blue a green.</p>
+                    </section>
+                    <section>
+                        <h2>Rollback</h2>
+                        <p>Volver atrás es tan sencillo como deshacer el cambio y volver a blue.</p>
+                    </section>
+                    <section>
+                        <h2>Evolución</h2>
+                        <p>Una vez hemos pasado de blue=>green, la siguiente actualización será green=>blue</p>
+                        <p>En nuestro docker-compose.yml aumentamos la versión de blue y hacemos la magia con scale.</p>
+                    </section>
+                </section>
+
+                <section>
+                    <h2>Varias opciones para balancear el tráfico</h2>
+                    <ul>
+                        <li>DNS: muy potente pero tarda en propagar los cambios.</li>
+                        <li>Proxy: modificamos la configuración del balanceador usando variables de entorno.</li>
+                        <li>Híbrido: DNS y luego LB => geoenrutamiento, basado en latencia, etc.</li>
+                    </ul>
+                </section>
+                <section>
+                    <h2>A/B deployments</h2>
+                    <p>Amazon y Google usan esta técnica</p>
+                    <p>Múltiples instancias de cada una de las versiones</p>
+                    <p>Cuando la confianza en una nueva versión va aumentando, se va sustituyendo la anterior</p>
+                </section>
+                <section>
+                    <h2>Links de interés</h2>
+                    <ul>
+                        <li><a href="https://blog.tutum.co/2015/06/08/blue-green-deployment-using-containers/">Blue-Green deployments using containers</a></li>
+                        <li><a href="http://rancher.com/docker-based-build-pipelines-part-3-managing-production-environments/#Blue-GreenDeployments">Docker based build pipelines</a></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>A tener en cuenta...</h2>
+                    <p>Varios sistemas que hacen cosas parecidas.</p>
+                    <p>Docker cloud, Rancher,...</p>
+                </section>
+
+                <section>
+                    <h2>A tener en cuenta...</h2>
+                    <p>Cuidado con el hype.</p>
+                    <p>No sobrecargues tus sistemas con cosas que no te hacen falta.</p>
+                </section>
+
+                <section>
+                    <h1>¿Preguntas?</h1>
+                </section>
+
+                <section>
+                    <img src="imgs/logo-introbay-blanco.svg" style="width: 30%;box-shadow: none;border: none;">
+                    <div>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div>
+                    <br>
+                    <h1>Gracias</h1>
+
+                    <div>Ignacio L Flores</div>
+                </section>
+            </div>
+        </div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+                theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+
+                // Parallax background image
+                //parallaxBackgroundImage: 'imgs/banner-fondo.jpg', 
+                // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
+
+                // Parallax background size
+                //parallaxBackgroundSize: '1024px 710px', // CSS syntax, e.g. "2100px 900px"
+
+                // Amount to move parallax background (horizontal and vertical) on slide change
+                // Number, e.g. 100
+                //parallaxBackgroundHorizontal: '',
+                //parallaxBackgroundVertical: '',
+
+                math: {
+                    mathjax: 'http://cdn.mathjax.org/mathjax/latest/MathJax.js',
+                    config: 'TeX-AMS_HTML-full' // See http://docs.mathjax.org/en/latest/config-files.html
+                },
+                // Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true },
+				],
+                keyboard: {
+                  39: 'next',
+                  37: 'prev',
+                  27: 'next'
+                }
+			});
+
+		</script>
+
+	</body>
+</html>
